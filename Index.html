@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="es" class="h-full bg-[#121212] text-white">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil Interactivo Estilo TikTok</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Fuentes de Google -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&family=Inter:wght@400;600;700&family=Pacifico&family=Roboto:wght@400;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        darkBg: '#121212',
+                        cardBg: '#1E1E1E',
+                        tiktokRed: '#FE2C55',
+                        tiktokCyan: '#25F4EE',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        spacemono: ['Space Mono', 'monospace'],
+                        roboto: ['Roboto', 'sans-serif'],
+                        firacode: ['Fira Code', 'monospace'],
+                        pacifico: ['Pacifico', 'cursive'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Estilos personalizados y utilidades de scroll */
+        body {
+            font-family: 'Inter', sans-serif;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="h-full bg-black flex justify-center items-center font-sans antialiased">
+
+    <!-- Contenedor principal que simula un marco de teléfono móvil en pantallas grandes -->
+    <div class="w-full max-w-md h-full sm:h-[92vh] bg-[#121212] sm:rounded-[32px] overflow-hidden flex flex-col shadow-2xl border border-neutral-800 relative">
+
+        <!-- HEADER DEL TELÉFONO / BARRAS SUP. -->
+        <div class="sticky top-0 z-30 bg-[#121212]/80 backdrop-blur-md px-5 py-3 flex justify-between items-center border-b border-neutral-800/50">
+            <div class="flex items-center space-x-2">
+                <span class="text-xs font-bold uppercase tracking-wider text-neutral-400">Perfil</span>
+            </div>
+            <div id="statusBadge" class="flex items-center space-x-1.5 px-2.5 py-1 rounded-full bg-neutral-800 text-[11px] text-tiktokCyan font-medium">
+                <span class="w-2 h-2 rounded-full bg-tiktokCyan animate-pulse"></span>
+                <span>En Línea</span>
+            </div>
+        </div>
+
+        <!-- CONTENIDO DESPLAZABLE -->
+        <div class="flex-1 overflow-y-auto custom-scrollbar relative pb-10">
+
+            <!-- 1. SECCIÓN BANNER -->
+            <div class="relative w-full h-44 bg-neutral-800 overflow-hidden cursor-pointer group" id="bannerContainer" onclick="triggerInput('inputBanner')">
+                <img id="bannerImg" src="https://placehold.co/800x400/1e1e2e/ffffff?text=Toca+para+cambiar+banner" alt="Banner de Perfil" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" />
+                <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity text-xs text-white font-medium">
+                    📸 Cambiar Banner
+                </div>
+            </div>
+
+            <!-- Inputs de archivo ocultos -->
+            <input type="file" id="inputBanner" accept="image/*" class="hidden" onchange="handleImageUpload(event, 'bannerImg')" />
+            <input type="file" id="inputAvatar" accept="image/*" class="hidden" onchange="handleImageUpload(event, 'avatarImg')" />
+            <input type="file" id="inputSticker" accept="image/*" class="hidden" onchange="handleStickerUpload(event)" />
+
+            <!-- 2. AVATAR Y DATOS DE PERFIL -->
+            <div class="px-5 relative mb-4">
+                <!-- Avatar Flotante sobre el Banner -->
+                <div class="relative -top-12 left-0 inline-block">
+                    <div class="w-24 h-24 rounded-full p-1 bg-gradient-to-tr from-tiktokCyan to-tiktokRed shadow-lg cursor-pointer group relative" onclick="triggerInput('inputAvatar')">
+                        <img id="avatarImg" src="https://placehold.co/150x150/222222/25F4EE?text=Avatar" alt="Foto de Perfil" class="w-full h-full rounded-full object-cover bg-neutral-900" />
+                        <div class="absolute inset-0 rounded-full bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity text-xs text-white text-center font-medium">
+                            📷 Editar
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Info principal -->
+                <div class="-mt-8">
+                    <!-- Nombre Dinámico -->
+                    <h1 id="profileName" class="text-2xl font-bold text-white tracking-wide transition-all">
+                        Nombre de Usuario
+                    </h1>
+                    <!-- Handle -->
+                    <p id="profileHandle" class="text-sm text-neutral-400 font-medium">@usuario</p>
+                    <!-- Biografía/Estado breve -->
+                    <p id="profileBio" class="text-xs text-neutral-300 mt-2 line-clamp-2">✨ Apasionado por el diseño, animación y stickers personalizados.</p>
+                </div>
+
+                <!-- BOTONES DE ACCIÓN Y EDICIÓN -->
+                <div class="mt-4 flex space-x-2">
+                    <button onclick="openEditModal()" class="flex-1 bg-neutral-800 hover:bg-neutral-700 active:scale-95 text-white font-semibold py-2 px-4 rounded-xl text-sm transition-all border border-neutral-700/50 flex items-center justify-center space-x-2">
+                        <span>✏️ Editar Perfil & Fuente</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 3. BANNERS DESTACADOS / BADGES -->
+            <div class="px-5 py-3 border-t border-b border-neutral-800/80 bg-neutral-900/30 my-3">
+                <p class="text-xs font-semibold text-neutral-400 uppercase tracking-wider mb-2">Insignias & Banners</p>
+                <div class="flex space-x-2 overflow-x-auto no-scrollbar py-1">
+                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gradient-to-r from-purple-900/50 to-pink-900/50 text-purple-200 border border-purple-500/30 shrink-0">
+                        🔥 Creador Pro
+                    </span>
+                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-neutral-800 text-tiktokCyan border border-tiktokCyan/30 shrink-0">
+                        ⚡ Space Mono Fan
+                    </span>
+                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-neutral-800 text-tiktokRed border border-tiktokRed/30 shrink-0">
+                        💎 Miembro VIP
+                    </span>
+                </div>
+            </div>
+
+            <!-- 4. SECCIÓN DE STICKERS -->
+            <div class="px-5 mt-4">
+                <div class="flex justify-between items-center mb-3">
+                    <div>
+                        <h2 class="text-base font-bold text-white">Colección de Stickers</h2>
+                        <p class="text-xs text-neutral-400">Importa tus propias imágenes PNG/GIFs</p>
+                    </div>
+                    <button onclick="triggerInput('inputSticker')" class="bg-gradient-to-r from-tiktokCyan to-blue-500 hover:opacity-90 active:scale-95 text-black font-bold text-xs py-2 px-3 rounded-lg shadow-md transition-all flex items-center space-x-1">
+                        <span>+ Agregar</span>
+                    </button>
+                </div>
+
+                <!-- Cuadrícula de Stickers -->
+                <div id="stickersGrid" class="grid grid-cols-3 gap-3 pt-2">
+                    <!-- Stickers Predeterminados Iniciales -->
+                    <div class="aspect-square bg-neutral-900/80 border border-neutral-800 rounded-2xl p-2 flex items-center justify-center relative group overflow-hidden">
+                        <span class="text-4xl hover:scale-125 transition-transform duration-200">🚀</span>
+                    </div>
+                    <div class="aspect-square bg-neutral-900/80 border border-neutral-800 rounded-2xl p-2 flex items-center justify-center relative group overflow-hidden">
+                        <span class="text-4xl hover:scale-125 transition-transform duration-200">🔥</span>
+                    </div>
+                    <div class="aspect-square bg-neutral-900/80 border border-neutral-800 rounded-2xl p-2 flex items-center justify-center relative group overflow-hidden">
+                        <span class="text-4xl hover:scale-125 transition-transform duration-200">💎</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- MODAL DE EDICIÓN DE PERFIL -->
+    <div id="editModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-neutral-900 border border-neutral-800 w-full max-w-sm rounded-2xl p-6 shadow-2xl relative animate-in fade-in zoom-in duration-200">
+            <h3 class="text-lg font-bold text-white mb-4">Personalizar Perfil</h3>
+
+            <!-- Formulario -->
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-neutral-400 mb-1">Nombre de Mostrar</label>
+                    <input type="text" id="editNameInput" class="w-full bg-neutral-800 border border-neutral-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-tiktokCyan" placeholder="Tu Nombre" />
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-neutral-400 mb-1">Usuario (@handle)</label>
+                    <input type="text" id="editHandleInput" class="w-full bg-neutral-800 border border-neutral-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-tiktokCyan" placeholder="@usuario" />
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-neutral-400 mb-1">Seleccionar Fuente Tipográfica</label>
+                    <select id="editFontSelect" class="w-full bg-neutral-800 border border-neutral-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-tiktokCyan">
+                        <option value="font-sans">Inter (Normal / TikTok)</option>
+                        <option value="font-spacemono">Space Mono (Retro / Tech)</option>
+                        <option value="font-firacode">Fira Code (Código)</option>
+                        <option value="font-roboto">Roboto (Limpia)</option>
+                        <option value="font-pacifico">Pacifico (Cursiva)</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Acciones -->
+            <div class="mt-6 flex space-x-2">
+                <button onclick="closeEditModal()" class="flex-1 bg-neutral-800 hover:bg-neutral-700 text-neutral-300 font-semibold py-2 rounded-lg text-sm transition-all">
+                    Cancelar
+                </button>
+                <button onclick="saveProfileChanges()" class="flex-1 bg-tiktokRed hover:bg-red-600 text-white font-semibold py-2 rounded-lg text-sm transition-all shadow-md">
+                    Guardar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- LÓGICA JAVASCRIPT DE INTERACCIÓN -->
+    <script>
+        // Disparar input de archivo local
+        function triggerInput(id) {
+            document.getElementById(id).click();
+        }
+
+        // Cargar imagen local para Banner o Avatar
+        function handleImageUpload(event, targetImgId) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById(targetImgId).src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // Cargar nuevos stickers dinámicamente
+        function handleStickerUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const grid = document.getElementById('stickersGrid');
+                    const stickerCard = document.createElement('div');
+                    stickerCard.className = 'aspect-square bg-neutral-900/80 border border-neutral-800 rounded-2xl p-2 flex items-center justify-center relative group overflow-hidden animate-in zoom-in duration-300';
+                    
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.className = 'w-full h-full object-contain hover:scale-110 transition-transform duration-200';
+                    img.alt = 'Sticker Personalizado';
+
+                    stickerCard.appendChild(img);
+                    grid.appendChild(stickerCard);
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // Abrir Modal de Edición
+        function openEditModal() {
+            const currentName = document.getElementById('profileName').innerText;
+            const currentHandle = document.getElementById('profileHandle').innerText;
+            
+            document.getElementById('editNameInput').value = currentName;
+            document.getElementById('editHandleInput').value = currentHandle;
+            
+            document.getElementById('editModal').classList.remove('hidden');
+        }
+
+        // Cerrar Modal
+        function closeEditModal() {
+            document.getElementById('editModal').classList.add('hidden');
+        }
+
+        // Guardar cambios de perfil y fuente
+        function saveProfileChanges() {
+            const newName = document.getElementById('editNameInput').value.trim();
+            const newHandle = document.getElementById('editHandleInput').value.trim();
+            const newFontClass = document.getElementById('editFontSelect').value;
+
+            const nameEl = document.getElementById('profileName');
+            const handleEl = document.getElementById('profileHandle');
+
+            if (newName) nameEl.innerText = newName;
+            if (newHandle) handleEl.innerText = newHandle.startsWith('@') ? newHandle : '@' + newHandle;
+
+            // Reemplazar clases tipográficas
+            nameEl.className = `text-2xl font-bold text-white tracking-wide transition-all ${newFontClass}`;
+
+            closeEditModal();
+        }
+    </script>
+</body>
+</html>
